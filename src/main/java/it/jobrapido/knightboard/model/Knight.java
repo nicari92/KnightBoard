@@ -5,6 +5,8 @@ import it.jobrapido.knightboard.model.enums.DirectionEnum;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -12,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Knight extends Coordinate {
+    @NotNull
     private DirectionEnum direction;
 
     @JsonIgnore

@@ -4,8 +4,9 @@ import it.jobrapido.knightboard.model.commands.Commands;
 import org.springframework.validation.annotation.Validated;
 
 import javax.naming.ConfigurationException;
+import javax.validation.Valid;
 
 @Validated
 public interface CommandsService {
-    public Commands getCommands() throws ConfigurationException;
+    public @Valid Commands getCommands() throws ConfigurationException;
 }

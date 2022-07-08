@@ -6,12 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public class Coordinate {
+    @NotNull
+    @Min(value = 0, message = "X coordinate cannot be negative")
     private int x;
+    @NotNull
+    @Min(value = 0, message = "Y coordinate cannot be negative")
     private int y;
 
     public void moveNorth() {

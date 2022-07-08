@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.naming.ConfigurationException;
+import javax.validation.ConstraintViolationException;
 
 @Service
 public class PlayServiceImpl implements PlayService {
@@ -38,7 +39,7 @@ public class PlayServiceImpl implements PlayService {
         try {
             board = boardService.getBoard();
             commands = commandsService.getCommands();
-        } catch (ConfigurationException ex) {
+        } catch (ConfigurationException | ConstraintViolationException | IllegalArgumentException ex) {
             throw new GenericException();
         }
         if (board == null || commands == null) {

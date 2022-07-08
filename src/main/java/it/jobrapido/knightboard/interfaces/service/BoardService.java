@@ -4,9 +4,8 @@ import it.jobrapido.knightboard.model.Board;
 import org.springframework.validation.annotation.Validated;
 
 import javax.naming.ConfigurationException;
-
+import javax.validation.Valid;
 @Validated
 public interface BoardService {
-    @Validated
-    public Mono<Board> getBoard() throws ConfigurationException;
+    public @Valid Board getBoard() throws ConfigurationException;
 }
