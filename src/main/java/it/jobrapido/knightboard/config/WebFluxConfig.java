@@ -24,7 +24,7 @@ public class WebFluxConfig implements WebFluxConfigurer {
     private static final int CONNECTION_TIMEOUT = 10000;
 
     @Bean
-    public WebClient getWebClient() {
+    public static WebClient getWebClient() {
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT)
                 .doOnConnected(conn -> conn
