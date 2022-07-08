@@ -4,7 +4,7 @@ This test could be solved using plain Java to achieve a smaller artifact, with m
 
 Having no guidelines I’ve chosen to implement a solution that better showed how I usually develop Java back-end architectures using the Spring framework.
 
-The choice of using a reactive stack (WebFlux) with blocking operations, while not best suited for the two GET operation on APIs, was just to try new the Spring features.
+The choice of using a reactive stack (WebFlux) with blocking operations, while not best suited for the two GET operations on APIs, was just to try the new Spring features.
 
 Clearly this is over-kill given the simple problem, but I hope you will appreciate the effort.
 
@@ -12,7 +12,7 @@ Clearly this is over-kill given the simple problem, but I hope you will apprecia
 
 # July 9th Update
 
-During the free time at the end of the week I was able to implements a few thins:
+During the free time at the end of the week I was able to implements a few things:
 - code refactoring: introduction of an abstract class "Command"
 - fixes on board and commands validation
 - **TESTS implementation**:
@@ -20,7 +20,7 @@ During the free time at the end of the week I was able to implements a few thins
   - functional
 - **BUG fixing**:
   - return OUT_OF_THE_BOARD if the knight goes out SOUTH or WEST (negative coordinates)
-  - prevent multiple prints (stop the program if and exception is throws during initialization)
+  - prevent multiple prints (stop the program if and exception is thrown during initialization)
 
 # Run the project
 Execute the following commands in the main project folder
