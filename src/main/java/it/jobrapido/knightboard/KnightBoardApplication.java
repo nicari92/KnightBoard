@@ -11,15 +11,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties(ApiPropertiesConfig.class)
 public class KnightBoardApplication {
-
-
     public static void main(String[] args) {
         new SpringApplicationBuilder(KnightBoardApplication.class)
                 .bannerMode(Banner.Mode.OFF)
-                //.logStartupInfo(false)
                 .web(WebApplicationType.NONE)
                 .run(args);
     }
-
-
 }

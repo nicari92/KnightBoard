@@ -5,10 +5,11 @@ import it.jobrapido.knightboard.interfaces.service.BoardService;
 import it.jobrapido.knightboard.interfaces.service.CommandsService;
 import it.jobrapido.knightboard.interfaces.service.CommandsValidator;
 import it.jobrapido.knightboard.interfaces.service.PlayService;
-import it.jobrapido.knightboard.model.*;
+import it.jobrapido.knightboard.model.Board;
+import it.jobrapido.knightboard.model.Coordinate;
+import it.jobrapido.knightboard.model.Knight;
+import it.jobrapido.knightboard.model.commands.*;
 import it.jobrapido.knightboard.model.enums.CommandEnum;
-import it.jobrapido.knightboard.model.enums.DirectionEnum;
-import it.jobrapido.knightboard.util.Commons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +36,26 @@ public class PlayServiceImpl implements PlayService {
     @Override
     public void initGame() throws InvalidStartPositionException, GenericException {
         try {
-            board = boardService.getBoard().block();
-            commands = commandsService.getCommands().block();
+            board = boardService.getBoard();
+            commands = commandsService.getCommands();
         } catch (ConfigurationException ex) {
             throw new GenericException();
         }
-
         if (board == null || commands == null) {
             throw new GenericException();
         }
 
-        try {
-            commandsValidator.validatePosition(commands.getStartPosition(), board);
-        } catch (ObstacleHitException | OutOfTheBoardException e) {
-            throw new InvalidStartPositionException();
+        //assuming start position if the FIRST command, as per specification
+        knight = ((StartCommand)commands.getMoves().get(0)).getKnight();
+        if (knight == null) {
+            throw new GenericException();
         }
 
-        knight = Knight.builder()
-                .x(commands.getStartPosition().getX())
-                .y(commands.getStartPosition().getY())
-                .direction(commands.getStartPosition().getDirection())
-                .build();
+        try {
+            commandsValidator.validatePosition(knight, board);
+        } catch (ObstacleHitException | OutOfTheBoardException ex) {
+            throw new InvalidStartPositionException();
+        }
 
         logger.debug("Knight start position: " + knight);
 
@@ -74,10 +74,9 @@ public class PlayServiceImpl implements PlayService {
     private void executeCommand(Command command) throws OutOfTheBoardException, InvalidCommandException {
         logger.debug("Executing command: " + command.getCommand());
 
-        if (command.getCommand().startsWith(CommandEnum.MOVE.name())) {
+        if (command.getCommand().equals(CommandEnum.MOVE)) {
             try {
-                int amount = Integer.parseInt(command.getCommand().split(Commons.COMMAND_SEPARATOR)[1]);
-                for (int i = 0; i < amount; i++) {
+                for (int i = 0; i < ((MoveCommand)command).getAmount(); i++) {
                     try {
                         tryNextMove();
                         knight.move();
@@ -89,10 +88,9 @@ public class PlayServiceImpl implements PlayService {
             } catch (NumberFormatException | InvalidStartPositionException ex) {
                 throw new InvalidCommandException();
             }
-        } else if (command.getCommand().startsWith(CommandEnum.ROTATE.name())) {
+        } else if (command.getCommand().equals(CommandEnum.ROTATE)) {
             try {
-                DirectionEnum newDirection = DirectionEnum.valueOf(command.getCommand().split(Commons.COMMAND_SEPARATOR)[1]);
-                knight.rotate(newDirection);
+                knight.rotate(((RotateCommand)command).getDirection());
                 logger.debug("Knight new orientation: " + knight.getDirection());
             } catch (IllegalArgumentException ex) {
                 throw new InvalidCommandException();

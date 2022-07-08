@@ -20,7 +20,7 @@ public class CommandsValidatorImpl implements CommandsValidator {
     public void validatePosition(Coordinate position, Board board) throws ObstacleHitException, OutOfTheBoardException {
 
         Optional<Coordinate> hitObstacle = board.getObstacles().stream()
-                .filter(o -> o.equals(position))
+                .filter(o -> o.getX() == position.getX() && o.getY() == position.getY())
                 .findFirst();
 
         if (hitObstacle.isPresent()) {

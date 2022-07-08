@@ -1,8 +1,7 @@
 package it.jobrapido.knightboard.interfaces.mapper;
 
-import it.jobrapido.knightboard.model.Command;
-import it.jobrapido.knightboard.model.Commands;
 import it.jobrapido.knightboard.model.Knight;
+import it.jobrapido.knightboard.model.commands.*;
 import it.jobrapido.knightboard.model.dto.CommandsDTO;
 import it.jobrapido.knightboard.model.enums.CommandEnum;
 import it.jobrapido.knightboard.model.enums.DirectionEnum;
@@ -13,55 +12,41 @@ import org.mapstruct.Named;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mapper
 @Validated
 public interface CommandsMapper {
 
-    @Mapping(target = "startPosition", source = "commands", qualifiedByName = "startPositionMapping")
-    @Mapping(target = "moves", source = "commands", qualifiedByName = "movesMapping")
+    @Mapping(target = "moves", source = "commands", qualifiedByName = "commandsMapping")
     Commands commandsDTOToCommands(@Valid CommandsDTO commandsDTO);
 
-    @Named("startPositionMapping")
-    static Knight startPositionStringToPosition(List<String> commands) {
-
+    @Named("commandsMapping")
+    static List<Command> mapCommands(List<String> commands) {
         if (commands == null || commands.isEmpty()) {
             return null;
-        }
-        Optional<String> optionalStartCommand = commands.stream().filter(c -> c.startsWith(CommandEnum.START.name())).findFirst();
-        if (optionalStartCommand.isEmpty()) {
-            return null;
-        }
-
-        String startCommand = optionalStartCommand.get();
-        String startPosition = startCommand.split(Commons.COMMAND_SEPARATOR)[1];
-        String[] splitStartPosition = startPosition.split(",");
-
-        if (splitStartPosition.length != 3) {
-            return null;
         } else {
-            return Knight.builder()
-                    .x(Integer.parseInt(splitStartPosition[0]))
-                    .y(Integer.parseInt(splitStartPosition[1]))
-                    .direction(DirectionEnum.valueOf(splitStartPosition[2]))
-                    .build();
-        }
-    }
+            return commands.stream().map(commandString -> {
+                CommandEnum command = CommandEnum.valueOf(commandString.split(Commons.COMMAND_SEPARATOR)[0]);
+                String commandValue = commandString.split(Commons.COMMAND_SEPARATOR)[1];
 
-    @Named("movesMapping")
-    static List<Command> listOfStringCommandsToListOfCommands(List<String> commands) {
-        if (commands == null || commands.size() <= 2) {
-            return Collections.emptyList();
-        }
-        List<String> commandsWithoutStart = commands.stream().skip(1).collect(Collectors.toList());
-        if (commandsWithoutStart.size() <= 1) {
-            return Collections.emptyList();
-        }
-        return commandsWithoutStart.stream().map(Command::new).collect(Collectors.toList());
+                if (command.equals(CommandEnum.START)) {
+                    String[] splitStartPosition = commandValue.split(",");
+                    return new StartCommand(Knight.builder()
+                            .x(Integer.parseInt(splitStartPosition[0]))
+                            .y(Integer.parseInt(splitStartPosition[1]))
+                            .direction(DirectionEnum.valueOf(splitStartPosition[2]))
+                            .build());
+                } else if (command.equals(CommandEnum.MOVE)) {
+                    return new MoveCommand(Integer.parseInt(commandValue));
+                } else if (command.equals(CommandEnum.ROTATE)) {
+                    return new RotateCommand(DirectionEnum.valueOf(commandValue));
+                } else {
+                    return null;
+                }
 
+            }).collect(Collectors.toList());
+        }
     }
 }

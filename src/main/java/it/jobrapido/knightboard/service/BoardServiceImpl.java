@@ -7,11 +7,9 @@ import it.jobrapido.knightboard.model.Board;
 import it.jobrapido.knightboard.model.dto.BoardDTO;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import javax.naming.ConfigurationException;
 import java.net.MalformedURLException;
@@ -26,19 +24,11 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private WebClient webClient;
 
-    @Value("${default.api.board}")
-    private String defaultBoardApi;
-
     private static final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
 
-    public Mono<Board> getBoard() throws ConfigurationException {
+    public Board getBoard() throws ConfigurationException {
         String boardApiUrl = apiProperties.getBoard();
 
-        try {
-            new URL(boardApiUrl);
-        } catch (MalformedURLException malformedURLException) {
-            boardApiUrl = defaultBoardApi;
-        }
         try {
             new URL(boardApiUrl);
         } catch (MalformedURLException malformedURLException) {
@@ -50,7 +40,8 @@ public class BoardServiceImpl implements BoardService {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(BoardDTO.class)
-                .map(boardMapper::boardDTOtoBoard);
+                .map(boardMapper::boardDTOtoBoard)
+                .block();
     }
 
 

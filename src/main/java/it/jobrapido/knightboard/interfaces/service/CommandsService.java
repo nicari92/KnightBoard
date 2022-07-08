@@ -1,8 +1,7 @@
 package it.jobrapido.knightboard.interfaces.service;
 
-import it.jobrapido.knightboard.model.Commands;
+import it.jobrapido.knightboard.model.commands.Commands;
 import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Mono;
 
 import javax.naming.ConfigurationException;
 
