@@ -10,6 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Commands {
-    private Knight startPosition;
     private List<Command> moves;
 }
