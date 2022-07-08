@@ -26,25 +26,18 @@ public class Play implements CommandLineRunner {
     public void run(String... args) throws Exception {
         try {
             playService.initGame();
+            Knight knightFinalPosition = playService.playGame();
+            if (knightFinalPosition != null) {
+                consolePrinterService.printSuccessResultAsJson(knightFinalPosition);
+            } else {
+                consolePrinterService.printGenericErrorResultAsJson();
+            }
         } catch (InvalidStartPositionException ex) {
             consolePrinterService.printInvalidStartPositionResultAsJson();
-        } catch (GenericException ex) {
-            consolePrinterService.printGenericErrorResultAsJson();
-        }
-
-        Knight knightFinalPosition = null;
-        try {
-            knightFinalPosition = playService.playGame();
-        } catch (InvalidCommandException | GenericException ex) {
+        } catch (InvalidCommandException |GenericException ex) {
             consolePrinterService.printGenericErrorResultAsJson();
         } catch (OutOfTheBoardException ex) {
             consolePrinterService.printOutOfTheBoardResultAsJson();
-        }
-
-        if (knightFinalPosition != null) {
-            consolePrinterService.printSuccessResultAsJson(knightFinalPosition);
-        } else {
-            consolePrinterService.printGenericErrorResultAsJson();
         }
     }
 }

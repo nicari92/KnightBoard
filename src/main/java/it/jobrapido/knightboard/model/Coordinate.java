@@ -71,8 +71,9 @@ public class Coordinate {
 
     @JsonIgnore
     public boolean isOutOfTheBoard(Board board) {
-        return x >= board.getWidth() ||
-                y >= board.getHeight();
+        return x < 0 || y < 0
+                || x >= board.getWidth()
+                || y >= board.getHeight();
     }
 
 }
