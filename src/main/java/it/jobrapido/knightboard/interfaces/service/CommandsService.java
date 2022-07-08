@@ -7,5 +7,5 @@ import javax.naming.ConfigurationException;
 
 @Validated
 public interface CommandsService {
-    public Mono<Commands> getCommands() throws ConfigurationException;
+    public Commands getCommands() throws ConfigurationException;
 }
