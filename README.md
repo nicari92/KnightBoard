@@ -8,8 +8,19 @@ The choice of using a reactive stack (WebFlux) with blocking operations, while n
 
 Clearly this is over-kill given the simple problem, but I hope you will appreciate the effort.
 
-Given the short timeframe of 3 days, unfortunately, I wasn’t able to develop in TDD or to complete the test implementations. Maybe I’ll implement them as an exercise in the next few days.
+**4th July**: Given the short timeframe of 3 days across the weekend, unfortunately, I wasn’t able to develop in TDD or to complete the test implementations. Maybe I’ll implement them as an exercise in the next few days.
 
+# July 9th Update
+
+During the free time at the end of the week I was able to implements a few thins:
+- code refactoring: introduction of an abstract class "Command"
+- fixes on board and commands validation
+- **TESTS implementation**:
+  - integration
+  - functional
+- **BUG fixing**:
+  - return OUT_OF_THE_BOARD if the knight goes out SOUTH or WEST (negative coordinates)
+  - prevent multiple prints (stop the program if and exception is throws during initialization)
 
 # Run the project
 Execute the following commands in the main project folder
