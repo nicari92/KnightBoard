@@ -17,4 +17,5 @@ public class KnightBoardApplication {
                 .web(WebApplicationType.NONE)
                 .run(args);
     }
+
 }
